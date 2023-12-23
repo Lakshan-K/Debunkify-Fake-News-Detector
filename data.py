@@ -22,3 +22,7 @@ fake_data = pd.read_csv(fake_csv_path)
 true_data = pd.read_csv(true_csv_path)
 fake_data.head() 
 true_data.head()
+
+# Merge datasets
+data_merge = pd.concat([fake_data, true_data], axis = 0) 
+data_merge.head(10)
