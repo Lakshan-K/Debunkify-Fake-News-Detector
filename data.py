@@ -8,3 +8,10 @@ fake_data = pd.read_csv(fake_csv_path)
 true_data = pd.read_csv(true_csv_path)
 fake_data.head() 
 true_data.head()
+
+# Read data
+# print("Fake Data:")
+# print(fake_data.head())
+
+# print("\nTrue Data:")
+# print(true_data.head())
