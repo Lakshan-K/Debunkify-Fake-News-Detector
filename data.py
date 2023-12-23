@@ -23,6 +23,10 @@ true_data = pd.read_csv(true_csv_path)
 fake_data.head() 
 true_data.head()
 
+# Assign labels to dataset
+fake_data["label"] = 0 
+true_data['label'] = 1
+
 # Merge datasets
 data_merge = pd.concat([fake_data, true_data], axis = 0) 
 data_merge.head(10)
