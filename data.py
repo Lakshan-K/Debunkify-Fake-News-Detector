@@ -26,3 +26,6 @@ true_data.head()
 # Merge datasets
 data_merge = pd.concat([fake_data, true_data], axis = 0) 
 data_merge.head(10)
+
+# Drop columns
+data = data_merge.drop(['title', 'subject', 'date'], axis = 1)
