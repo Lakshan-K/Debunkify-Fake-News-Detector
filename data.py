@@ -1,6 +1,10 @@
 import pandas as pd
 
-# Make sure the path is correct
-data = pd.read_csv("Fake.csv") 
-data = pd.read_csv("True.csv") 
-print(data.head())
+fake_csv_path = "news_datasets/Fake.csv"
+true_csv_path = "news_datasets/True.csv"
+
+# Read the CSV files
+fake_data = pd.read_csv(fake_csv_path)
+true_data = pd.read_csv(true_csv_path)
+fake_data.head() 
+true_data.head()
