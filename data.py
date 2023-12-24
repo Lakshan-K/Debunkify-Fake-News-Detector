@@ -112,3 +112,7 @@ def create_model(lstm_units=128, dense_units=64, dropout_rate=0.5, embedding_out
 early_stopping = EarlyStopping(monitor='val_loss', patience=3)
 model_checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss', save_best_only=True)
 
+# Train the model with specified hyperparameters, and use callbacks for early stopping and checkpointing
+model = create_model(lstm_units=256, dense_units=128, dropout_rate=0.3, embedding_output=256)
+history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2, callbacks=[early_stopping, model_checkpoint])
+
