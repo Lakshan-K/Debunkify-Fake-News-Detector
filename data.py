@@ -98,14 +98,23 @@ print("Test Accuracy:", accuracy)  # The accuracy of the model's predictions on 
 
 # Function to create a neural network model with customizable hyperparameters for tuning
 def create_model(lstm_units=128, dense_units=64, dropout_rate=0.5, embedding_output=128):
+    # Create an empty neural network model
     model = Sequential()
+    # Add a layer to process text data (Embedding layer)
     model.add(Embedding(input_dim=max_words, output_dim=embedding_output, input_length=maxlen))
+    # Add a layer for sequence processing (LSTM)
     model.add(LSTM(lstm_units, return_sequences=True))
+    # Add another LSTM layer with fewer units
     model.add(LSTM(int(lstm_units/2)))
+    # Add a layer to learn complex patterns (Dense with ReLU activation)
     model.add(Dense(dense_units, activation='relu'))
+    # Add dropout to prevent overfitting
     model.add(Dropout(dropout_rate))
+    # Add the final layer for binary classification (Dense with sigmoid activation)
     model.add(Dense(1, activation='sigmoid'))
+    # Compile the model for training
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    # Return the created model
     return model
 
 # Callbacks for stopping training early if no improvement and saving the best model
