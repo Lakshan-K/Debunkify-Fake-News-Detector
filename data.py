@@ -51,4 +51,12 @@ data = data_merge.drop(['title', 'subject', 'date'], axis = 1)
 # Clean the text data
 data['text'] = data['text'].apply(clean_text)
 
+# Text Tokenization
+max_words = 10000  # You can adjust this based on your vocabulary size
+tokenizer = Tokenizer(num_words=max_words)
+tokenizer.fit_on_texts(data['text'])
+
+# Convert text to sequences of integers
+sequences = tokenizer.texts_to_sequences(data['text'])
+
 
