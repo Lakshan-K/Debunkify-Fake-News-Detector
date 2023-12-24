@@ -4,17 +4,16 @@ import re
 import string
 import tensorflow as tf 
 import pprint 
-  
 from keras.preprocessing.text import Tokenizer 
 from keras.preprocessing.sequence import pad_sequences 
 from keras.utils import to_categorical 
 from keras import regularizers 
 from keras.models import Sequential
 from keras.layers import Embedding, LSTM, Dense, Dropout
-  
 from tensorflow.python.framework import ops 
 from sklearn.model_selection import train_test_split 
 from sklearn import preprocessing 
+from keras.callbacks import EarlyStopping, ModelCheckpoint #import for Hyperparameter Tuning: EarlyStopping and ModelCheckpoint
 
 # Define the text cleaning function 
 def clean_text(text):
@@ -96,3 +95,16 @@ history = model.fit(X_train, y_train, epochs=5, batch_size=64, validation_split=
 loss, accuracy = model.evaluate(X_test, y_test)
 print("Test Loss:", loss)  # The value of the loss function on the test data
 print("Test Accuracy:", accuracy)  # The accuracy of the model's predictions on the test data
+
+# Function to create a neural network model with customizable hyperparameters for tuning
+def create_model(lstm_units=128, dense_units=64, dropout_rate=0.5, embedding_output=128):
+    model = Sequential()
+    model.add(Embedding(input_dim=max_words, output_dim=embedding_output, input_length=maxlen))
+    model.add(LSTM(lstm_units, return_sequences=True))
+    model.add(LSTM(int(lstm_units/2)))
+    model.add(Dense(dense_units, activation='relu'))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    return model
+
