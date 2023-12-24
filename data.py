@@ -117,8 +117,11 @@ def create_model(lstm_units=128, dense_units=64, dropout_rate=0.5, embedding_out
     # Return the created model
     return model
 
-# Callbacks for stopping training early if no improvement and saving the best model
+# Define an early stopping callback to monitor validation loss and stop training 
+# if it doesn't improve for 'patience' epochs
 early_stopping = EarlyStopping(monitor='val_loss', patience=3)
+# Define a model checkpoint callback to save the best model weights based on validation loss
+# The 'save_best_only=True' option ensures that only the best model is saved
 model_checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss', save_best_only=True)
 
 # Train the model with specified hyperparameters, and use callbacks for early stopping and checkpointing
