@@ -13,6 +13,18 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing 
 tf.disable_eager_execution() 
 
+# Define the text cleaning function 
+def clean_text(text):
+    text = text.lower()
+    text = re.sub(r'\[.*?\]', '', text)
+    text = re.sub(r'\W', ' ', text)
+    text = re.sub(r'https?://\S+|www\.\S+', '', text)
+    text = re.sub(r'<.*?>', '', text)
+    text = re.sub(f'[{re.escape(string.punctuation)}]', '', text)
+    text = re.sub(r'in', '', text)
+    text = re.sub(r'\w*\d\w*', '', text)
+    return text
+
 
 fake_csv_path = "news_datasets/Fake.csv"
 true_csv_path = "news_datasets/True.csv"
