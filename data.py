@@ -9,6 +9,8 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences 
 from keras.utils import to_categorical 
 from keras import regularizers 
+from keras.models import Sequential
+from keras.layers import Embedding, LSTM, Dense, Dropout
   
 from tensorflow.python.framework import ops 
 from sklearn.model_selection import train_test_split 
@@ -68,3 +70,12 @@ y = data['label'].values
 
 # Splitting the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Define the model
+model = Sequential()
+model.add(Embedding(input_dim=max_words, output_dim=128, input_length=maxlen))
+model.add(LSTM(128, return_sequences=True))
+model.add(LSTM(64))
+model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(1, activation='sigmoid'))
