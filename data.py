@@ -1,19 +1,19 @@
-import pandas as pd
-import numpy as np 
-import re
-import string
-import tensorflow as tf 
-import pprint 
-from keras.preprocessing.text import Tokenizer 
-from keras.preprocessing.sequence import pad_sequences 
-from keras.utils import to_categorical 
-from keras import regularizers 
-from keras.models import Sequential
-from keras.layers import Embedding, LSTM, Dense, Dropout
-from tensorflow.python.framework import ops 
-from sklearn.model_selection import train_test_split 
-from sklearn import preprocessing 
-from keras.callbacks import EarlyStopping, ModelCheckpoint #import for Hyperparameter Tuning: EarlyStopping and ModelCheckpoint
+# Import necessary libraries and modules for data preprocessing, modeling, and evaluation
+import pandas as pd             # For data manipulation and handling
+import numpy as np              # For numerical operations
+import re                       # For regular expressions used in text cleaning
+import string                   # For working with string operations
+import tensorflow as tf         # For using TensorFlow backend for Keras
+import pprint                   # For pretty printing
+from keras.preprocessing.text import Tokenizer     # For text tokenization
+from keras.preprocessing.sequence import pad_sequences  # For padding sequences
+from keras.utils import to_categorical              # For one-hot encoding of labels
+from keras import regularizers                      # For regularization in neural networks
+from keras.models import Sequential                # For creating sequential neural network models
+from keras.layers import Embedding, LSTM, Dense, Dropout  # For specifying layers in the neural network
+from sklearn.model_selection import train_test_split  # For splitting the dataset into train and test sets
+from sklearn import preprocessing                  # For data preprocessing
+from keras.callbacks import EarlyStopping, ModelCheckpoint  # For setting up callbacks for model training
 
 # Define the text cleaning function 
 def clean_text(text):
