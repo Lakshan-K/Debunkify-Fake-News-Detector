@@ -59,4 +59,8 @@ tokenizer.fit_on_texts(data['text'])
 # Convert text to sequences of integers
 sequences = tokenizer.texts_to_sequences(data['text'])
 
+# Padding sequences (adjust maxlen as needed)
+maxlen = 200  # adjust this based on desired sequence length
+X = pad_sequences(sequences, maxlen=maxlen)
+
 
