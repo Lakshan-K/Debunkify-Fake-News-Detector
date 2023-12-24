@@ -2,14 +2,14 @@ import pandas as pd
 import numpy as np 
 import re
 import string
-  
-from tensorflow.keras.preprocessing.text import Tokenizer 
-from tensorflow.keras.preprocessing.sequence import pad_sequences 
-from tensorflow.keras.utils import to_categorical 
-from tensorflow.keras import regularizers 
-  
+import tensorflow as tf 
 import pprint 
-import tensorflow.compat.v1 as tf 
+  
+from keras.preprocessing.text import Tokenizer 
+from keras.preprocessing.sequence import pad_sequences 
+from keras.utils import to_categorical 
+from keras import regularizers 
+  
 from tensorflow.python.framework import ops 
 from sklearn.model_selection import train_test_split 
 from sklearn import preprocessing 
