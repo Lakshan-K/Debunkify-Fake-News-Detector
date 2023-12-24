@@ -85,3 +85,6 @@ model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.5))
 # Add the final layer for binary classification (0 or 1) using sigmoid activation
 model.add(Dense(1, activation='sigmoid'))
+
+# Compile the model with settings for training
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
