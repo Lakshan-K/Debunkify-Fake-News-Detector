@@ -82,3 +82,6 @@ model.add(Dense(1, activation='sigmoid'))
 
 # Compile the model
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Train the model
+history = model.fit(X_train, y_train, epochs=5, batch_size=64, validation_split=0.2)
