@@ -47,3 +47,8 @@ data_merge.head(10)
 
 # Drop columns
 data = data_merge.drop(['title', 'subject', 'date'], axis = 1)
+
+# Clean the text data
+data['text'] = data['text'].apply(clean_text)
+
+
