@@ -17,16 +17,24 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint  # For setting up cal
 
 # Define the text cleaning function 
 def clean_text(text):
+    # Convert the text to lowercase to ensure uniformity
     text = text.lower()
+    # Remove text within square brackets, often used for annotations or references
     text = re.sub(r'\[.*?\]', '', text)
+    # Replace non-word characters and symbols with spaces
     text = re.sub(r'\W', ' ', text)
+    # Remove URLs starting with 'http' or 'https' and 'www' links
     text = re.sub(r'https?://\S+|www\.\S+', '', text)
+    # Remove text within angle brackets, which might represent HTML tags
     text = re.sub(r'<.*?>', '', text)
-    text = re.sub(f'[{re.escape(string.punctuation)}]', '', text)
+    # Remove punctuation marks using the string.punctuation list
+    text = re.sub(f'[{re.escape(string.punctuation)}]', '', text) 
+    # Exclude the word 'in' (considered a stopword) from the text
     text = re.sub(r'in', '', text)
+    # Remove alphanumeric words (words containing digits)
     text = re.sub(r'\w*\d\w*', '', text)
+    # Return the cleaned text
     return text
-
 
 fake_csv_path = "news_datasets/Fake.csv"
 true_csv_path = "news_datasets/True.csv"
