@@ -108,3 +108,7 @@ def create_model(lstm_units=128, dense_units=64, dropout_rate=0.5, embedding_out
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return model
 
+# Callbacks for stopping training early if no improvement and saving the best model
+early_stopping = EarlyStopping(monitor='val_loss', patience=3)
+model_checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss', save_best_only=True)
+
