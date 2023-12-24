@@ -71,17 +71,17 @@ y = data['label'].values
 # Splitting the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Define the model
+# Create an empty sequential model
 model = Sequential()
+# Add an embedding layer for processing text data
 model.add(Embedding(input_dim=max_words, output_dim=128, input_length=maxlen))
+# Add a type of neural layer called LSTM to process sequences
 model.add(LSTM(128, return_sequences=True))
+# Add another LSTM layer for deeper processing
 model.add(LSTM(64))
+# Add a layer with ReLU activation function for more complex patterns
 model.add(Dense(64, activation='relu'))
+# Add dropout to prevent overfitting (a technique to improve model's generalization)
 model.add(Dropout(0.5))
+# Add the final layer for binary classification (0 or 1) using sigmoid activation
 model.add(Dense(1, activation='sigmoid'))
-
-# Compile the model
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-
-# Train the model
-history = model.fit(X_train, y_train, epochs=5, batch_size=64, validation_split=0.2)
