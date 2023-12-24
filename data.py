@@ -94,5 +94,5 @@ history = model.fit(X_train, y_train, epochs=5, batch_size=64, validation_split=
 
 # Evaluate the model on the test data
 loss, accuracy = model.evaluate(X_test, y_test)
-print("Test Loss:", loss)  # The value of the loss function on the test data.
-print("Test Accuracy:", accuracy)  # The accuracy of the model's predictions on the test data.
+print("Test Loss:", loss)  # The value of the loss function on the test data
+print("Test Accuracy:", accuracy)  # The accuracy of the model's predictions on the test data
