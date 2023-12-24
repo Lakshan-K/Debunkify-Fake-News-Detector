@@ -15,7 +15,6 @@ from keras.layers import Embedding, LSTM, Dense, Dropout
 from tensorflow.python.framework import ops 
 from sklearn.model_selection import train_test_split 
 from sklearn import preprocessing 
-tf.disable_eager_execution() 
 
 # Define the text cleaning function 
 def clean_text(text):
