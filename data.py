@@ -116,3 +116,6 @@ model_checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss', save_bes
 model = create_model(lstm_units=256, dense_units=128, dropout_rate=0.3, embedding_output=256)
 history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2, callbacks=[early_stopping, model_checkpoint])
 
+# Load the weights of the best performing model
+model.load_weights('best_model.h5')
+
