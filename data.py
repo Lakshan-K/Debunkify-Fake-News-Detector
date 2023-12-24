@@ -88,3 +88,7 @@ model.add(Dense(1, activation='sigmoid'))
 
 # Compile the model with settings for training
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Train the model using the training data with 5 training cycles (epochs)
+# and update model's parameters using batches of 64 data points
+history = model.fit(X_train, y_train, epochs=5, batch_size=64, validation_split=0.2)
