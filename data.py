@@ -199,7 +199,8 @@ history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split
 # Load the weights of the best performing model
 model.load_weights('best_model.h5')
 
-# Evaluate the model's performance on the test dataset
+# Evaluate the model's performance on the test dataset after 
+# fine-tuning the model's hyperparameters
 loss, accuracy = model.evaluate(X_test, y_test)
 print("Test Loss:", loss)
 print("Test Accuracy:", accuracy)
