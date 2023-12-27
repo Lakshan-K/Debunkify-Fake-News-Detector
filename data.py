@@ -131,10 +131,6 @@ history = model.fit(training_padded, training_labels,
                                      testing_labels),
                     verbose=2)
 
-# Save the trained model to a file
-model.save("news_model.h5")
-
-
 # Get user input for a news article text
 user_input_text = input("Enter the news article text: ")
 
