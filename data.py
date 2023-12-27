@@ -2,7 +2,6 @@
 import pandas as pd  # For data manipulation
 import numpy as np   # For numerical operations
 import re            # For regular expressions
-import json          # For JSON handling
 import csv           # For CSV handling
 import random        # For generating random values
 import string        # For string manipulation
