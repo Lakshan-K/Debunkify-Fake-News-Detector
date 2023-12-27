@@ -1,26 +1,26 @@
 # Import necessary libraries
-import pandas as pd  # For data manipulation
-import numpy as np   # For numerical operations
-import re            # For regular expressions
-import csv           # For CSV handling
-import random        # For generating random values
-import string        # For string manipulation
-import tensorflow as tf  # For creating and training deep learning models
-import pprint        # For pretty printing
-import os            # For interacting with the operating system
-import pickle        # For saving and loading Python objects
+import pandas as pd  # Import the pandas library for data manipulation
+import numpy as np   # Import the numpy library for numerical operations
+import re            # Import the re library for regular expressions
+import csv           # Import the csv library for handling CSV files
+import random        # Import the random library for generating random values
+import string        # Import the string library for string manipulation
+import tensorflow as tf  # Import the TensorFlow library for deep learning
+import pprint        # Import the pprint library for pretty printing
+import os            # Import the os library for interacting with the operating system
+import pickle        # Import the pickle library for saving and loading Python objects
 
 # Import specific modules from Keras, a deep learning library
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
-from keras.utils import to_categorical
-from keras import regularizers
-from keras.models import Sequential
-from keras.layers import Embedding, LSTM, Dense, Dropout
-from sklearn.model_selection import train_test_split
-from sklearn import preprocessing
-from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.models import load_model
+from keras.preprocessing.text import Tokenizer  # Import Tokenizer for text processing
+from keras.preprocessing.sequence import pad_sequences  # Import pad_sequences for padding sequences
+from keras.utils import to_categorical  # Import to_categorical for one-hot encoding
+from keras import regularizers  # Import regularizers for regularization
+from keras.models import Sequential  # Import Sequential for creating a sequential model
+from keras.layers import Embedding, LSTM, Dense, Dropout  # Import various layers for building the model
+from sklearn.model_selection import train_test_split  # Import train_test_split for splitting data
+from sklearn import preprocessing  # Import preprocessing for label encoding
+from keras.callbacks import EarlyStopping, ModelCheckpoint  # Import callbacks for model training
+from keras.models import load_model  # Import load_model for loading a saved model
 
 # Reading the data from a CSV file named "news.csv" using pandas
 data = pd.read_csv("news.csv")
@@ -40,13 +40,13 @@ le.fit(data['label'])
 data['label'] = le.transform(data['label'])
 
 # Define some parameters for text processing and model training
-embedding_dim = 50
-max_length = 54
-trunc_type = 'post'
-padding_type = 'post'
-oov_tok = "<OOV>"
-training_size = 3000
-test_portion = 0.1
+embedding_dim = 50  # Size of word embeddings
+max_length = 54  # Maximum length of sequences
+trunc_type = 'post'  # Truncation type for sequences
+padding_type = 'post'  # Padding type for sequences
+oov_tok = "<OOV>"  # Token for out-of-vocabulary words
+training_size = 3000  # Size of the training dataset
+test_portion = 0.1  # Percentage of data to use for testing
 
 # Create empty lists to store titles, text, and labels
 title = []
@@ -85,8 +85,7 @@ with open('glove.6B.50d.txt', encoding='utf-8') as f:
     for line in f:
         values = line.split()
         word = values[0]
-        coefs = np.asarray(values[1:]
-, dtype='float32')
+        coefs = np.asarray(values[1:], dtype='float32')
         embeddings_index[word] = coefs
 
 # Generating embeddings matrix for our dataset
@@ -99,28 +98,35 @@ for word, i in word_index1.items():
 
 # Create a sequential neural network model
 model = tf.keras.Sequential([
-    tf.keras.layers.Embedding(vocab_size1+1, embedding_dim,
+    # Add an Embedding layer for word embeddings
+    tf.keras.layers.Embedding(vocab_size1 + 1, embedding_dim,
                               input_length=max_length, weights=[
                                   embeddings_matrix],
                               trainable=False),
+    # Add a Dropout layer with a dropout rate of 0.2 to prevent overfitting
     tf.keras.layers.Dropout(0.2),
+    # Add a 1D Convolutional layer with 64 filters, a filter size of 5, and ReLU activation
     tf.keras.layers.Conv1D(64, 5, activation='relu'),
+    # Add a MaxPooling1D layer with a pool size of 4 to reduce dimensionality
     tf.keras.layers.MaxPooling1D(pool_size=4),
+    # Add an LSTM (Long Short-Term Memory) layer with 64 units for sequence processing
     tf.keras.layers.LSTM(64),
+    # Add a Dense layer with a single output unit and a sigmoid activation function for binary classification
     tf.keras.layers.Dense(1, activation='sigmoid')
 ])
 
 # Compile the model
-model.compile(loss='binary_crossentropy',
-              optimizer='adam', metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Define the number of training epochs
 num_epochs = 50
 
-# Prepare the training and testing data
+# Convert the training sequences (padded) to a NumPy array and store it in 'training_padded'
 training_padded = np.array(training_sequences1)
+# Convert the training labels to a NumPy array and store it in 'training_labels'
 training_labels = np.array(training_labels)
+# Convert the testing sequences (padded) to a NumPy array and store it in 'testing_padded'
 testing_padded = np.array(test_sequences1)
+# Convert the testing labels to a NumPy array and store it in 'testing_labels'
 testing_labels = np.array(test_labels)
 
 # Train the model on the training data
