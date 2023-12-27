@@ -9,8 +9,8 @@ import string
 app = Flask(__name__)
 
 # Load the model and tokenizer
-model = load_model('best_model.h5')
-with open('preprocessed_data.pickle', 'rb') as f:
+model = load_model('news_model.h5')
+with open('tokenizer.pickle', 'rb') as f:
     _, _, tokenizer, maxlen = pickle.load(f)
 
 def clean_text(text):
