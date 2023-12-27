@@ -1,206 +1,164 @@
-# Import necessary libraries and modules for data preprocessing, modeling, and evaluation
-import pandas as pd             # For data manipulation and handling
-import numpy as np              # For numerical operations
-import re                       # For regular expressions used in text cleaning
-import string                   # For working with string operations
-import tensorflow as tf         # For using TensorFlow backend for Keras
-import pprint                   # For pretty printing
-from keras.preprocessing.text import Tokenizer     # For text tokenization
-from keras.preprocessing.sequence import pad_sequences  # For padding sequences
-from keras.utils import to_categorical              # For one-hot encoding of labels
-from keras import regularizers                      # For regularization in neural networks
-from keras.models import Sequential                # For creating sequential neural network models
-from keras.layers import Embedding, LSTM, Dense, Dropout  # For specifying layers in the neural network
-from sklearn.model_selection import train_test_split  # For splitting the dataset into train and test sets
-from sklearn import preprocessing                  # For data preprocessing
-from keras.callbacks import EarlyStopping, ModelCheckpoint  # For setting up callbacks for model training
-from keras.models import load_model                # For loading the Keras model
-import json 
-import os
-import pickle
+# Import necessary libraries
+import pandas as pd  # For data manipulation
+import numpy as np   # For numerical operations
+import re            # For regular expressions
+import json          # For JSON handling
+import csv           # For CSV handling
+import random        # For generating random values
+import string        # For string manipulation
+import tensorflow as tf  # For creating and training deep learning models
+import pprint        # For pretty printing
+import os            # For interacting with the operating system
+import pickle        # For saving and loading Python objects
 
-# Define the text cleaning function 
-def clean_text(text):
-    # Convert the text to lowercase to ensure uniformity
-    text = text.lower()
-    # Remove text within square brackets, often used for annotations or references
-    text = re.sub(r'\[.*?\]', '', text)
-    # Replace non-word characters and symbols with spaces
-    text = re.sub(r'\W', ' ', text)
-    # Remove URLs starting with 'http' or 'https' and 'www' links
-    text = re.sub(r'https?://\S+|www\.\S+', '', text)
-    # Remove text within angle brackets, which might represent HTML tags
-    text = re.sub(r'<.*?>', '', text)
-    # Remove punctuation marks using the string.punctuation list
-    text = re.sub(f'[{re.escape(string.punctuation)}]', '', text) 
-    # Exclude the word 'in' (considered a stopword) from the text
-    text = re.sub(r'in', '', text)
-    # Remove alphanumeric words (words containing digits)
-    text = re.sub(r'\w*\d\w*', '', text)
-    # Replace newline characters with spaces
-    text = text.replace('\n', ' ')
-    # Return the cleaned text
-    return text
+# Import specific modules from Keras, a deep learning library
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.utils import to_categorical
+from keras import regularizers
+from keras.models import Sequential
+from keras.layers import Embedding, LSTM, Dense, Dropout
+from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
+from keras.callbacks import EarlyStopping, ModelCheckpoint
+from keras.models import load_model
 
-fake_csv_path = "news_datasets/Fake.csv"
-true_csv_path = "news_datasets/True.csv"
+# Reading the data from a CSV file named "news.csv" using pandas
+data = pd.read_csv("news.csv")
 
-# Read the CSV files
-fake_data = pd.read_csv(fake_csv_path)
-true_data = pd.read_csv(true_csv_path)
+# Display the first few rows of the dataset
+data.head()
 
-# Assign labels to dataset
-fake_data["label"] = 0 
-true_data['label'] = 1
+# Drop a column named "Unnamed: 0" from the dataset
+data = data.drop(["Unnamed: 0"], axis=1)
 
-# Merge datasets
-data_merge = pd.concat([fake_data, true_data], axis=0) 
+# Display the first 5 rows of the dataset after dropping the column
+data.head(5)
 
-# Drop columns
-data = data_merge.drop(['title', 'subject', 'date'], axis=1)
+# Encode the labels in the 'label' column to numerical values
+le = preprocessing.LabelEncoder()
+le.fit(data['label'])
+data['label'] = le.transform(data['label'])
 
-# Define a function to preprocess the data
-def preprocess_data(data, max_words, maxlen):
-    # Clean the text data
-    data['text'] = data['text'].apply(clean_text)
-    
-    # Text Tokenization
-    tokenizer = Tokenizer(num_words=max_words)
-    tokenizer.fit_on_texts(data['text'])
-    
-    # Convert text to sequences of integers
-    sequences = tokenizer.texts_to_sequences(data['text'])
-    
-    # Padding sequences (adjust maxlen as needed)
-    X = pad_sequences(sequences, maxlen=maxlen)
-    
-    # Labels
-    y = data['label'].values
-    
-    return X, y, tokenizer
+# Define some parameters for text processing and model training
+embedding_dim = 50
+max_length = 54
+trunc_type = 'post'
+padding_type = 'post'
+oov_tok = "<OOV>"
+training_size = 3000
+test_portion = 0.1
 
-# Text Tokenization and Padding (only if preprocessed data does not exist)
-max_words = 10000  # You can adjust this based on your vocabulary size
-maxlen = 200  # adjust this based on desired sequence length
+# Create empty lists to store titles, text, and labels
+title = []
+text = []
+labels = []
 
-if os.path.exists('preprocessed_data.pickle'):
-    with open('preprocessed_data.pickle', 'rb') as f:
-        loaded_data = pickle.load(f)
-    X, y, tokenizer, maxlen = loaded_data
+# Iterate through the first 3000 rows of the dataset
+for x in range(training_size):
+    title.append(data['title'][x])
+    text.append(data['text'][x])
+    labels.append(data['label'][x])
+
+# Create a tokenizer for processing the title text
+tokenizer1 = Tokenizer()
+tokenizer1.fit_on_texts(title)
+word_index1 = tokenizer1.word_index
+vocab_size1 = len(word_index1)
+sequences1 = tokenizer1.texts_to_sequences(title)
+
+# Pad the sequences to make them the same length
+padded1 = pad_sequences(
+    sequences1, padding=padding_type, truncating=trunc_type)
+
+# Split the data into training and test sets
+split = int(test_portion * training_size)
+training_sequences1 = padded1[split:training_size]
+test_sequences1 = padded1[0:split]
+test_labels = labels[0:split]
+training_labels = labels[split:training_size]
+
+# Create a dictionary to store word embeddings
+embeddings_index = {}
+
+# Open and read pre-trained word embeddings from a file
+with open('glove.6B.50d.txt', encoding='utf-8') as f:
+    for line in f:
+        values = line.split()
+        word = values[0]
+        coefs = np.asarray(values[1:]
+, dtype='float32')
+        embeddings_index[word] = coefs
+
+# Generating embeddings matrix for our dataset
+embeddings_matrix = np.zeros((vocab_size1+1, embedding_dim))
+for word, i in word_index1.items():
+    embedding_vector = embeddings_index.get(word)
+
+    if embedding_vector is not None:
+        embeddings_matrix[i] = embedding_vector
+
+# Create a sequential neural network model
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(vocab_size1+1, embedding_dim,
+                              input_length=max_length, weights=[
+                                  embeddings_matrix],
+                              trainable=False),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Conv1D(64, 5, activation='relu'),
+    tf.keras.layers.MaxPooling1D(pool_size=4),
+    tf.keras.layers.LSTM(64),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+# Compile the model
+model.compile(loss='binary_crossentropy',
+              optimizer='adam', metrics=['accuracy'])
+
+# Define the number of training epochs
+num_epochs = 50
+
+# Prepare the training and testing data
+training_padded = np.array(training_sequences1)
+training_labels = np.array(training_labels)
+testing_padded = np.array(test_sequences1)
+testing_labels = np.array(test_labels)
+
+# Train the model on the training data
+history = model.fit(training_padded, training_labels,
+                    epochs=num_epochs,
+                    validation_data=(testing_padded,
+                                     testing_labels),
+                    verbose=2)
+
+# Save the trained model to a file
+model.save("news_model.h5")
+
+# Save the tokenizer to a file
+with open('tokenizer.pickle', 'wb') as handle:
+    pickle.dump(tokenizer1, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+# Load the saved model from a file
+model = load_model("news_model.h5")
+
+# Load the saved tokenizer from a file
+with open('tokenizer.pickle', 'rb') as handle:
+    tokenizer1 = pickle.load(handle)
+
+# Get user input for a news article text
+user_input_text = input("Enter the news article text: ")
+
+# Preprocess the user input text
+sequences = tokenizer1.texts_to_sequences([user_input_text])[0]
+sequences = pad_sequences([sequences], maxlen=54,
+                          padding=padding_type,
+                          truncating=trunc_type)
+
+# Make a prediction using the trained model
+prediction = model.predict(sequences, verbose=0)[0][0]
+
+# Display the result based on the prediction
+if prediction >= 0.5:
+    print("This news is likely true.")
 else:
-    X, y, tokenizer = preprocess_data(data, max_words, maxlen)
-    
-    with open('preprocessed_data.pickle', 'wb') as f:
-        pickle.dump((X, y, tokenizer, maxlen), f)
-
-# Splitting the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Check if 'best_model.h5' file exists
-if os.path.exists('best_model.h5'):
-    # Load the pre-trained model
-    model = load_model('best_model.h5')
-else:
-    # Create an empty sequential model
-    model = Sequential()
-    # Add an embedding layer for processing text data
-    model.add(Embedding(input_dim=max_words, output_dim=128, input_length=maxlen))
-    # Add a type of neural layer called LSTM to process sequences
-    model.add(LSTM(128, return_sequences=True))
-    # Add another LSTM layer for deeper processing
-    model.add(LSTM(64))
-    # Add a layer with ReLU activation function for more complex patterns
-    model.add(Dense(64, activation='relu'))
-    # Add dropout to prevent overfitting (a technique to improve model's generalization)
-    model.add(Dropout(0.5))
-    # Add the final layer for binary classification (0 or 1) using sigmoid activation
-    model.add(Dense(1, activation='sigmoid'))
-    # Compile the model with settings for training
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-    # Train the model using the training data with 5 training cycles (epochs)
-    # and update model's parameters using batches of 64 data points
-    history = model.fit(X_train, y_train, epochs=5, batch_size=64, validation_split=0.2)
-    model.save('best_model.h5')
-
-# Modify the classify_text function to accept and classify multiple lines of text
-def classify_text(input_text):
-    # Clean the input text
-    cleaned_text = clean_text(input_text)
-    
-    # Tokenize and pad the input text
-    sequences = tokenizer.texts_to_sequences([cleaned_text])
-    padded_sequences = pad_sequences(sequences, maxlen=maxlen)
-    
-    # Make predictions for each sequence
-    predictions = model.predict(padded_sequences)
-    
-    # Interpret the predictions for each sequence
-    results = []
-    for prediction in predictions:
-        if prediction < 0.5:
-            results.append("The text is likely to be fake.")
-        else:
-            results.append("The text is likely to be real.")
-    
-    return results
-
-# Collect input
-user_input = input("Enter a piece of text to classify: ")
-# Classify the input text
-results = classify_text(user_input)
-# Print the results
-for result in results:
-    print(result)
-
-# Evaluate the model on the test data
-loss, accuracy = model.evaluate(X_test, y_test)
-print("Test Loss:", loss)  # The value of the loss function on the test data
-print("Test Accuracy:", accuracy)  # The accuracy of the model's predictions on the test data
-
-# Function to create a neural network model with customizable hyperparameters for tuning
-def create_model(lstm_units=128, dense_units=64, dropout_rate=0.5, embedding_output=128):
-    # Create an empty neural network model
-    model = Sequential()
-    # Add a layer to process text data (Embedding layer)
-    model.add(Embedding(input_dim=max_words, output_dim=embedding_output, input_length=maxlen))
-    # Add a layer for sequence processing (LSTM)
-    model.add(LSTM(lstm_units, return_sequences=True))
-    # Add another LSTM layer with fewer units
-    model.add(LSTM(int(lstm_units/2)))
-    # Add a layer to learn complex patterns (Dense with ReLU activation)
-    model.add(Dense(dense_units, activation='relu'))
-    # Add dropout to prevent overfitting
-    model.add(Dropout(dropout_rate))
-    # Add the final layer for binary classification (Dense with sigmoid activation)
-    model.add(Dense(1, activation='sigmoid'))
-    # Compile the model for training
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-    # Return the created model
-    return model
-
-# Define an early stopping callback to monitor validation loss and stop training 
-# if it doesn't improve for 'patience' epochs
-early_stopping = EarlyStopping(monitor='val_loss', patience=3)
-# Define a model checkpoint callback to save the best model weights based on validation loss
-# The 'save_best_only=True' option ensures that only the best model is saved
-model_checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss', save_best_only=True)
-
-# Train the model with specified hyperparameters, and use callbacks for early stopping and checkpointing
-model = create_model(lstm_units=256, dense_units=128, dropout_rate=0.3, embedding_output=256)
-# Train the model using the training data for 10 epochs:
-# - X_train: Input sequences for training
-# - y_train: Labels for training
-# - epochs: Number of training cycles
-# - batch_size: Number of data points processed in each batch
-# - validation_split: 20% of the training data used for validation
-# - callbacks: EarlyStopping and ModelCheckpoint callbacks used during training
-history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2, callbacks=[early_stopping, model_checkpoint])
-
-# Load the weights of the best performing model
-model.load_weights('best_model.h5')
-
-# Evaluate the model's performance on the test dataset after 
-# fine-tuning the model's hyperparameters
-loss, accuracy = model.evaluate(X_test, y_test)
-print("Test Loss:", loss)
-print("Test Accuracy:", accuracy)
+    print("This news is likely false.")
