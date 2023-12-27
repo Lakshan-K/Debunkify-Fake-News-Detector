@@ -131,20 +131,6 @@ history = model.fit(training_padded, training_labels,
                                      testing_labels),
                     verbose=2)
 
-# Save the trained model to a file
-model.save("news_model.h5")
-
-# Save the tokenizer to a file
-with open('tokenizer.pickle', 'wb') as handle:
-    pickle.dump(tokenizer1, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-# Load the saved model from a file
-model = load_model("news_model.h5")
-
-# Load the saved tokenizer from a file
-with open('tokenizer.pickle', 'rb') as handle:
-    tokenizer1 = pickle.load(handle)
-
 # Get user input for a news article text
 user_input_text = input("Enter the news article text: ")
 
