@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Prediction Result</title>
+    <title>Debunkify - Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Prediction Result</h2>
-    <p>{{ prediction }}</p>
-    <a href="/">Try another text</a>
+    <div class="container">
+        <header>
+            <h1 class="title">Debunkify</h1>
+        </header>
+        <p class="result">{{ prediction }}</p>
+        <a href="/" class="button">Try another text</a>
+    </div>
 </body>
 </html>

@@ -1,0 +1,131 @@
+/* General Resets and Sophisticated Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: #f0f0f0;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Smooth Gradient Background */
+body {
+    background: linear-gradient(-45deg, #434343, #000000);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Container with Elegance */
+.container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
+
+/* Header with Luxurious Feel */
+header {
+    padding: 40px 0;
+    text-align: center;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 300;
+}
+
+/* Title with Grandeur */
+.title {
+    font-size: 3.5rem;
+    color: #fff;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+}
+
+.title:hover {
+    transform: scale(1.05);
+}
+
+/* Form Styles with Finesse */
+form {
+    margin-bottom: 40px;
+}
+
+.textbox, .button {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 15px;
+    border: none;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.textbox {
+    background: rgba(68, 68, 68, 0.9);
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.textbox:focus {
+    background: rgba(80, 80, 80, 0.9);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.button {
+    background-color: #6a11cb;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #2575fc;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* Result Page with Refined Style */
+.result {
+    font-size: 1.6rem;
+    padding: 25px;
+    border-radius: 15px;
+    background: rgba(68, 68, 68, 0.9);
+    margin: 40px 0;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+a {
+    display: inline-block;
+    margin-top: 30px;
+    color: #6a11cb;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #2575fc;
+}
+
+/* Responsive Design for All Devices */
+@media (max-width: 700px) {
+    .container {
+        width: 90%;
+        margin: 30px auto;
+    }
+
+    .title {
+        font-size: 2.8rem;
+    }
+}

@@ -2,43 +2,22 @@ from flask import Flask, render_template, request
 from keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
 import pickle
-import re
-import string
-
 
 app = Flask(__name__)
 
 # Load the model and tokenizer
+# Ensure these paths correctly point to where your 'news_model.h5' and 'tokenizer.pickle' are stored.
 model = load_model('news_model.h5')
-with open('tokenizer.pickle', 'rb') as f:
-    _, _, tokenizer, maxlen = pickle.load(f)
+with open('tokenizer.pickle', 'rb') as handle:
+    tokenizer = pickle.load(handle)
 
-def clean_text(text):
-    # clean_text function as defined in the script
-    text = text.lower()
-    text = re.sub(r'\[.*?\]', '', text)
-    text = re.sub(r'\W', ' ', text)
-    text = re.sub(r'https?://\S+|www\.\S+', '', text)
-    text = re.sub(r'<.*?>', '', text)
-    text = re.sub(f'[{re.escape(string.punctuation)}]', '', text) 
-    text = re.sub(r'in', '', text)
-    text = re.sub(r'\w*\d\w*', '', text)
-    text = text.replace('\n', ' ')
-    return text
-
-# Modify the classify_text function to use the clean_text and make predictions
 def classify_text(input_text):
-    cleaned_text = clean_text(input_text)  # Use the clean_text function
-    sequences = tokenizer.texts_to_sequences([cleaned_text])  # Tokenize text
-    padded_sequences = pad_sequences(sequences, maxlen=maxlen)  # Pad sequences
-    predictions = model.predict(padded_sequences)  # Make predictions
-    results = []
-    for prediction in predictions:
-        if prediction < 0.5:
-            results.append("The text is likely to be fake.")
-        else:
-            results.append("The text is likely to be real.")
-    return results
+    # Preprocess the text in the same way as in data.py
+    sequences = tokenizer.texts_to_sequences([input_text])
+    padded_sequences = pad_sequences(sequences, maxlen=54, padding='post', truncating='post')
+    # Predict
+    prediction = model.predict(padded_sequences, verbose=0)[0][0]
+    return "This news is likely true." if prediction >= 0.5 else "This news is likely false."
 
 @app.route('/')
 def index():
@@ -49,7 +28,7 @@ def predict():
     if request.method == 'POST':
         text = request.form['text']
         result = classify_text(text)
-        return render_template('result.html', prediction=result[0])
+        return render_template('result.html', prediction=result)
 
 if __name__ == '__main__':
     app.run(debug=True)

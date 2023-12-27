@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fake News Detector</title>
+    <title>Debunkify - Fake News Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Fake News Detector</h2>
-    <form action="/predict" method="post">
-        <textarea name="text" rows="4" cols="50" placeholder="Enter news text here..."></textarea>
-        <br>
-        <input type="submit" value="Classify">
-    </form>
+    <div class="container">
+        <header>
+            <h1 class="title">Debunkify</h1>
+        </header>
+        <form action="/predict" method="post">
+            <textarea class="textbox" name="text" rows="4" cols="50" placeholder="Enter news text here..."></textarea>
+            <br>
+            <input type="submit" value="Classify" class="button">
+        </form>
+    </div>
 </body>
 </html>
