@@ -9,7 +9,7 @@ import string        # For string manipulation
 import tensorflow as tf  # For creating and training deep learning models
 import pprint        # For pretty printing
 import os            # For interacting with the operating system
-import pickle        # For saving and loading Python objects
+import pickle        # For saving and loading Python objects 
 
 # Import specific modules from Keras, a deep learning library
 from keras.preprocessing.text import Tokenizer
@@ -130,6 +130,10 @@ history = model.fit(training_padded, training_labels,
                     validation_data=(testing_padded,
                                      testing_labels),
                     verbose=2)
+
+# Save the trained model to a file
+model.save("news_model.h5")
+
 
 # Get user input for a news article text
 user_input_text = input("Enter the news article text: ")
