@@ -17,7 +17,7 @@
 | ------------------------------------------- | ------------------------------------------- |
 | ![Screenshot](URL_TO_IMAGE_1) | ![Screenshot](URL_TO_IMAGE_2) |
 
-This Fake News Detector is a tool designed to identify and classify fake news articles from legitimate ones. It utilizes deep learning techniques to analyze textual data and make predictions. 
+This Fake News Detector is a tool designed to identify and classify fake news articles from legitimate ones. It utilizes deep learning techniques and natural language processing to analyze textual data and make predictions. 
 
 ### Built With
 
