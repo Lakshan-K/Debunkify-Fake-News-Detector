@@ -13,7 +13,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About the Project
 
-| Screenshot 1                                | Screenshot 2                                |
+| Screenshot 1 [TO BE ADDED]                  | Screenshot 2 [TO BE ADDED]                  |
 | ------------------------------------------- | ------------------------------------------- |
 | ![Screenshot](URL_TO_IMAGE_1) | ![Screenshot](URL_TO_IMAGE_2) |
 
