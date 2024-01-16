@@ -13,9 +13,10 @@
 <!-- ABOUT THE PROJECT -->
 ## About the Project
 
-| Screenshot 1 [TO BE ADDED]                  | Screenshot 2 [TO BE ADDED]                  |
-| ------------------------------------------- | ------------------------------------------- |
-| ![Screenshot](URL_TO_IMAGE_1) | ![Screenshot](URL_TO_IMAGE_2) |
+| Screenshot 1 [News Article Text]     | Screenshot 2 [Fake News Detected]     |
+| ----------------------------------- | ------------------------------------ |
+| ![Screenshot 1](demo/News-Input.png) | ![Screenshot 2](demo/Fake-News-Detected.png) |
+
 
 This Fake News Detector is a tool designed to identify and classify fake news articles from legitimate ones. It utilizes deep learning techniques and natural language processing to analyze textual data and make predictions. 
 
